@@ -1,0 +1,28 @@
+import pandas as pd
+import datetime as dt
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import skew, kurtosis, shapiro
+
+# Define the path to the data file
+path = "/Users/syedmohathashimali/Downloads/spain_energy_market.csv"
+# Read the data from the csv file
+data = pd.read_csv(path, sep="," , parse_dates=["datetime"])
+
+# Filter the data to only include the "Demanda programada PBF total" name
+# Create a new column "date" that contains only the date portion of the datetime index
+# Set the index to be the "date" column
+data = data[data["name"] == "Demanda programada PBF total"]  # .set_index("datetime")
+data["date"] = data["datetime"].dt.date
+data.set_index("date", inplace=True)
+data = data[["value"]]
+data = data.asfreq("D")
+data = data.rename(columns={"value": "energy"})
+data.info()
+data[:5]
+
+data.plot(title="Energy Demand")
+plt.ylabel("MWh")
+plt.show()
+len(pd.date_range(start="2014-01-01", end="2018-12-31"))
